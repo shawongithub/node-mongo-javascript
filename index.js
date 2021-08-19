@@ -2,9 +2,13 @@ const express = require("express")
 const app = express()
 const bodyParser = require('body-parser')
 const ObjectId = require('mongodb').ObjectId
-const password = "rrp7rMxbP8vzt7i"
+
 const { MongoClient } = require('mongodb');
-const uri = "mongodb+srv://tshirtBuyer:rrp7rMxbP8vzt7i@cluster0.lhztw.mongodb.net/organicDB?retryWrites=true&w=majority";
+require('dotenv').config()
+const username = process.env.DB_USER
+const password = process.env.DB_PASS
+
+const uri = `mongodb+srv://${username}:${password}@cluster0.lhztw.mongodb.net/organicDB?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({ extended: false }))
 const jsonParser = bodyParser.json()
@@ -17,6 +21,8 @@ app.get('/', (req, res) => {
 
 
 client.connect(err => {
+    console.log(username)
+    console.log(password)
     const collection = client.db("organicDB").collection("products");
     app.get('/products', (req, res) => {
         collection.find({})
